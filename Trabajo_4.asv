@@ -8,7 +8,7 @@ close all
 %% Datos   
     % Condiciones de la pala
 Psi = pi/2;
-Phi = pi/2;
+Phi = 0;
 U1 = 12;
 rho = 1.225;
 Iu = 0.15;
@@ -29,8 +29,6 @@ for i = 1:length(c_aero)
     alpha2(i) = Phi-thetaC-thetaG(i);
     ff = c_aero{i}; 
     [~,~,~,~,alpha,cd] = ff('cd');
-    [~,~,~,~,~,cl] = ff('cl');
-    [~,~,~,~,~,cm] = ff('cm');
     for j = 1:length(cd)
         if abs(alpha2(1,i)) <= abs(alpha(j,1))*1.05 & abs(alpha2(1,i)) >= abs(alpha(j,1))*0.95 
             cd_x(i) = cd(j,1);
@@ -39,24 +37,15 @@ for i = 1:length(c_aero)
             cd_x(i) = 0;
         end
     end
-    for j = 1:length(cl)
-        if abs(alpha2(1,i)) <= abs(alpha(j,1))*1.05 & abs(alpha2(1,i)) >= abs(alpha(j,1))*0.95 
-            cl_x(i) = cl(j,1);
-            break
-        else
-            cl_x(i) = 0;
-        end
-    end
-    for j = 1:length(cm)
-        if abs(alpha2(1,i)) <= abs(alpha(j,1))*1.05 & abs(alpha2(1,i)) >= abs(alpha(j,1))*0.95 
-            cm_x(i) = cd(j,1);
-            break
-        else
-            cm_x(i) = 0;
-        end
-    end
 
 end
+
+%     [alpha, cd_x] = ff('cd');
+%     [alpha, cm_x] = ff('cm');
+%     cl(i) = cl_x;
+%     cd(i) = cd_x;
+%     cm(i) = cm_x;
+% end
 
 %% Cálculo Ca(r) y Fb,zh1(r)
     % Para pala sin rotación (Omega = 0 rad/s) la expresión de Ca(r) es: 
@@ -71,13 +60,13 @@ subplot(1,2,1)
 plot(r,Ca,'b-')
 grid on;
 xlabel('$r$ [m]','interpreter','latex','fontsize',12)
-ylabel('$C_a (r)$ [Ns/m^{2}]','interpreter','latex','fontsize',12)
+ylabel('$C_a(r)$ [Ns/m^2]$','interpreter','latex','fontsize',12)
 
 subplot(1,2,2)
 plot(r,fb_zh1,'r-')
-grid on;
 xlabel('$r$ [m]','interpreter','latex','fontsize',12)
-ylabel('$F_{b,zH1} (r)$ [N/m]','interpreter','latex','fontsize',12)
+ylabel('$F_{b,zH1}$ [N/m]','interpreter','latex','fontsize',12)
+legend('Ca(r) [$Ns/m^{2}$]','$F_{b,zH1}$ [N/m]','interpreter','latex')
 
 %% Análisis modal
 
