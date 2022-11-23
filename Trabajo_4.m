@@ -80,7 +80,24 @@ xlabel('$r$ [m]','interpreter','latex','fontsize',12)
 ylabel('$F_{b,zH1} (r)$ [N/m]','interpreter','latex','fontsize',12)
 
 %% Análisis modal
+    % Características estructurales de la pala
+pala = beamNREL_5MW49tp(@bladeNREL_5MW49tp,thetaC);
+m = pala.mass;
 
+    % Solución modal
+[omega1,w,dw] = solveEigen(pala,1,0);
+psi1 = w;
+    % Vector deformación del primer modo
+figure(2)
+plot(r,w)
+grid on;
+xlabel('$r$ [m]','interpreter','latex','fontsize',12)
+ylabel('$w (r)$ [m]','interpreter','latex','fontsize',12)
+
+    % Cálculo de las características modales
+m1 = trapz(r,psi1.^2.*m);
+ca1 = trapz(r,psi1.^2.*Ca');
+chi_a1 = ca1/(2*m1*omega1/(2*pi));
 
 
 %% 
