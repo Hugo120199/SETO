@@ -70,14 +70,14 @@ figure(1)
 subplot(1,2,1)
 plot(r,Ca,'b-')
 grid on;
-xlabel('$r$ [m]','interpreter','latex','fontsize',12)
-ylabel('$C_a (r)$ [Ns/m^{2}]','interpreter','latex','fontsize',12)
+xlabel('$r [m]$','interpreter','latex','fontsize',12)
+ylabel('$C_a (r)$ [Ns/m^{2}]$','interpreter','latex','fontsize',12)
 
 subplot(1,2,2)
 plot(r,fb_zh1,'r-')
 grid on;
-xlabel('$r$ [m]','interpreter','latex','fontsize',12)
-ylabel('$F_{b,zH1} (r)$ [N/m]','interpreter','latex','fontsize',12)
+xlabel('$r [m]$','interpreter','latex','fontsize',12)
+ylabel('$F_{b,zH1} (r) [N/m]$','interpreter','latex','fontsize',12)
 
 %% Análisis modal
     % Características estructurales de la pala
@@ -87,6 +87,7 @@ m = pala.mass;
     % Solución modal
 [omega1,w,dw] = solveEigen(pala,1,0);
 psi1 = w;
+f1 = omega1/(2*pi);
     % Vector deformación del primer modo
 figure(2)
 plot(r,w)
@@ -97,8 +98,47 @@ ylabel('$w (r)$ [m]','interpreter','latex','fontsize',12)
     % Cálculo de las características modales
 m1 = trapz(r,psi1.^2.*m);
 ca1 = trapz(r,psi1.^2.*Ca');
-chi_a1 = ca1/(2*m1*omega1/(2*pi));
+chi_a1 = ca1/(2*m1*(f1)); %esto XD no da muy bien pero el resto cuadra
+chi_s1 =  0.004775; % Considerar el amortiguamiento estructural proporcionado en la referencia Jonkman et al. (2009).
+cs1 = 2*m1*chi_s1*omega1;
+c1 = ca1 + cs1;
+chi_1 = chi_a1 + chi_s1;
 
+    % Imprimimos los resultados por pantalla:
+disp("----------------------------------------------------------------------");
+disp("f_1 [Hz] | m_1 [kg] | c_1 [kg/s] | chi_1a [%] | chi_1s [%] | chi_1 [%]");
+disp(string(omega1/(2*pi)) + " | " + string(m1) + " | " + string(c1) + " | " + string(chi_a1*100) + " | " + string(chi_s1*100) + " | " + string(chi_1*100));
+
+    % Función de transferencia del libro que nos piden el bode:
+
+H1 = tf(1,m1*[1, 2*chi_1*omega1, omega1^2]);
+[mag,phase,wout] = bode(H1);
+
+figure()
+subplot(2,1,1)
+semilogx(wout/(2*pi),20*log10(squeeze(mag(1,1,:))),"-","Color",'black');
+ylabel("$Magnitud [dB]$",'Interpreter','latex');
+xlim([wout(1)/(2*pi) wout(end)/(2*pi)]);
+grid minor;
+
+subplot(2,1,2)
+semilogx(wout/(2*pi),squeeze(phase(1,1,:)),"-","Color",'black');
+ylabel("$Fase [^{\circ}]$",'Interpreter','latex');
+xlabel("$f [Hz]$",'Interpreter','latex');
+xlim([wout(1)/(2*pi) wout(end)/(2*pi)]);
+grid minor;
+
+    % Comparación de f1 con los distintos modelos (esta en el libro esto también)
+
+ f1_fast = 1.0793; error_fast = abs(f1_fast - f1)/f1;
+ f1_adams = 1.074; error_adams = abs(f1_adams - f1)/f1;
+
+ disp("---------------------------------------");
+ disp("           |   f1   | f1_fast | f1_adams ");
+ disp("Valor [Hz] | " + string(f1) + " | " + string(f1_fast) + " | " + string(f1_adams));
+ disp("Error [%]  | " + " ----- | " + string(error_fast*100) + " | " + string(error_adams*100));
+
+ %% Distribución promedio de desplazamiento y momento flector de batimiento
 
 %% 
 function [Ay,Az,Ayz] = pAxes2aAxes(A1,A2,alpha)
