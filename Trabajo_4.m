@@ -179,15 +179,18 @@ Iu = linspace(0.1,0.2,5);
 
 for l=1:1:49
     v(l)=psi1(l)*Ca(l);
+    v_2(l) = m(l)*psi1(l)*r(l);
 end
 
 for i = 1:length(Lu)
     for j = 1:length(Iu)
         
         k_co = trapz(r,v);
+        k_mb1 = trapz(r,v_2);
         So = 4*(Iu(j)^2)*Lu(i)*U1*(2/3)^(5/3);
         sigma_u = (U1*Iu(j))^2;
         sigma_wt(i,j) = (k_co.^2)*((sigma_u/(16*pi*(m1.^2)*f1.^4)) + So/(64*pi*chi_1*(m1.^2)*f1.^3));
+        sigma_mbr(i,j) = ((2*pi*f1)^2)*(k_mb1^2)*(sigma_wt(i,j));
     end
 end
 
@@ -214,6 +217,31 @@ plot(Iu,sigma_wt(end,:),'-','LineWidth',LW); hold on
 
 xlabel("$Iu [-]$",'Interpreter','latex','FontSize',FS);
 ylabel("$\sigma_{w,t}^2 [m^2]$",'Interpreter','latex','FontSize',FS);
+strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
+legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
+grid on;
+
+figure()
+plot(Lu,sigma_mbr(:,1)/(10^6),'-','LineWidth',LW); hold on
+plot(Lu,sigma_mbr(:,2)/(10^6),'-','LineWidth',LW); hold on
+plot(Lu,sigma_mbr(:,3)/(10^6),'-','LineWidth',LW); hold on
+plot(Lu,sigma_mbr(:,4)/(10^6),'-','LineWidth',LW); hold on
+plot(Lu,sigma_mbr(:,5)/(10^6),'-','LineWidth',LW); hold on
+
+xlabel("$Lu [m]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{m_b,r}^2 [MN^2 m^2]$",'Interpreter','latex','FontSize',FS);
+legend("$Iu = " + string(Iu) + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
+grid on;
+
+figure()
+plot(Iu,sigma_mbr(1,:)/(10^6),'-','LineWidth',LW); hold on
+plot(Iu,sigma_mbr(10,:)/(10^6),'-','LineWidth',LW); hold on
+plot(Iu,sigma_mbr(25,:)/(10^6),'-','LineWidth',LW); hold on
+plot(Iu,sigma_mbr(35,:)/(10^6),'-','LineWidth',LW); hold on
+plot(Iu,sigma_mbr(end,:)/(10^6),'-','LineWidth',LW); hold on
+
+xlabel("$Iu [-]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{m_b,r}^2 [MN^2 m^2]$",'Interpreter','latex','FontSize',FS);
 strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
 legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
