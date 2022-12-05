@@ -169,6 +169,55 @@ ylabel('$Mb_{yH1} (r)$ [Nm]','interpreter','latex','fontsize',14)
 
 %% Varianza de desplazamiento y de momento flector de batimiento
 
+    % Para la condición de viento S0C1, representar la dependencia funcional de la varianza
+% del desplazamiento en la punta, σ2 w,t, con la intensidad de turbulencia, Iu, y con la
+% longitud de escala, Lu. Comentar y discutir dicha dependencia funcional.
+
+
+Lu = linspace(50,500,50);
+Iu = linspace(0.1,0.2,5);
+
+for l=1:1:49
+    v(l)=psi1(l)*Ca(l);
+end
+
+for i = 1:length(Lu)
+    for j = 1:length(Iu)
+        
+        k_co = trapz(r,v);
+        So = 4*(Iu(j)^2)*Lu(i)*U1*(2/3)^(5/3);
+        sigma_u = (U1*Iu(j))^2;
+        sigma_wt(i,j) = (k_co.^2)*((sigma_u/(16*pi*(m1.^2)*f1.^4)) + So/(64*pi*chi_1*(m1.^2)*f1.^3));
+    end
+end
+
+LW = 1.5; FS = 18;
+
+figure()
+plot(Lu,sigma_wt(:,1),'-','LineWidth',LW); hold on
+plot(Lu,sigma_wt(:,2),'-','LineWidth',LW); hold on
+plot(Lu,sigma_wt(:,3),'-','LineWidth',LW); hold on
+plot(Lu,sigma_wt(:,4),'-','LineWidth',LW); hold on
+plot(Lu,sigma_wt(:,5),'-','LineWidth',LW); hold on
+
+xlabel("$Lu [m]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{w,t}^2 [m^2]$",'Interpreter','latex','FontSize',FS);
+legend("$Iu = " + string(Iu) + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
+grid on;
+
+figure()
+plot(Iu,sigma_wt(1,:),'-','LineWidth',LW); hold on
+plot(Iu,sigma_wt(10,:),'-','LineWidth',LW); hold on
+plot(Iu,sigma_wt(25,:),'-','LineWidth',LW); hold on
+plot(Iu,sigma_wt(35,:),'-','LineWidth',LW); hold on
+plot(Iu,sigma_wt(end,:),'-','LineWidth',LW); hold on
+
+xlabel("$Iu [-]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{w,t}^2 [m^2]$",'Interpreter','latex','FontSize',FS);
+strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
+legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
+grid on;
+
 %% 
 function [Ay,Az,Ayz] = pAxes2aAxes(A1,A2,alpha)
     % According to Bauchau page 234 equations (6.34a,b,c) where for the
