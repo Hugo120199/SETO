@@ -95,7 +95,7 @@ psi1 = w;
 f1 = omega1/(2*pi);
     % Vector deformación del primer modo
 figure(2)
-plot(r,w)
+plot(r,w,'k-')
 grid on;
 xlabel('$r$ [m]','interpreter','latex','fontsize',14)
 ylabel('$\psi_1$','interpreter','latex','fontsize',14)
@@ -154,8 +154,8 @@ W_prom = psi1.*Fb_zh1_prom;
 figure(4)
 plot(r,W_prom,'k-')
 grid on;
-xlabel('$r [m]$','interpreter','latex','fontsize',14)
-ylabel('$W (r)$ [m]','interpreter','latex','fontsize',14)
+xlabel('$r$ $[\mathrm{m}]$','interpreter','latex','fontsize',14)
+ylabel('$W$ $(r)$ $[\mathrm{m}]$','interpreter','latex','fontsize',14)
 
     % Distribución promedio de momento flector (esto está con pinzas)
 for i = 1:length(r)
@@ -164,12 +164,12 @@ end
 figure(5)
 plot(r,Mb_yh1_prom,'k-')
 grid on;
-xlabel('$r [m]$','interpreter','latex','fontsize',14)
-ylabel('$Mb_{yH1} (r)$ [Nm]','interpreter','latex','fontsize',14)
+xlabel('$r$ $[\mathrm{m}]$','interpreter','latex','fontsize',14)
+ylabel('$Mb_{y,H1}$ $(r)$ $[\mathrm{N}]$','interpreter','latex','fontsize',14)
 
 %% Varianza de desplazamiento y de momento flector de batimiento
 
-    % Para la condición de viento S0C1, representar la dependencia funcional de la varianza
+% Para la condición de viento S0C1, representar la dependencia funcional de la varianza
 % del desplazamiento en la punta, σ2 w,t, con la intensidad de turbulencia, Iu, y con la
 % longitud de escala, Lu. Comentar y discutir dicha dependencia funcional.
 
@@ -203,8 +203,8 @@ plot(Lu,sigma_wt(:,3),'-','LineWidth',LW); hold on
 plot(Lu,sigma_wt(:,4),'-','LineWidth',LW); hold on
 plot(Lu,sigma_wt(:,5),'-','LineWidth',LW); hold on
 
-xlabel("$Lu [m]$",'Interpreter','latex','FontSize',FS);
-ylabel("$\sigma_{w,t}^2 [m^2]$",'Interpreter','latex','FontSize',FS);
+xlabel("$Lu [\mathrm{m}]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{w,t}^2 [\mathrm{m^2}]$",'Interpreter','latex','FontSize',FS);
 legend("$Iu = " + string(Iu) + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
 
@@ -216,7 +216,7 @@ plot(Iu,sigma_wt(35,:),'-','LineWidth',LW); hold on
 plot(Iu,sigma_wt(end,:),'-','LineWidth',LW); hold on
 
 xlabel("$Iu [-]$",'Interpreter','latex','FontSize',FS);
-ylabel("$\sigma_{w,t}^2 [m^2]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{w,t}^2 [\mathrm{m^2}]$",'Interpreter','latex','FontSize',FS);
 strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
 legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
@@ -228,8 +228,8 @@ plot(Lu,sigma_mbr(:,3)/(10^6),'-','LineWidth',LW); hold on
 plot(Lu,sigma_mbr(:,4)/(10^6),'-','LineWidth',LW); hold on
 plot(Lu,sigma_mbr(:,5)/(10^6),'-','LineWidth',LW); hold on
 
-xlabel("$Lu [m]$",'Interpreter','latex','FontSize',FS);
-ylabel("$\sigma_{m_b,r}^2 [MN^2 m^2]$",'Interpreter','latex','FontSize',FS);
+xlabel("$Lu [\mathrm{m}]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{m_b,r}^2 [\mathrm{MN^2 m^2}]$",'Interpreter','latex','FontSize',FS);
 legend("$Iu = " + string(Iu) + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
 
@@ -241,10 +241,21 @@ plot(Iu,sigma_mbr(35,:)/(10^6),'-','LineWidth',LW); hold on
 plot(Iu,sigma_mbr(end,:)/(10^6),'-','LineWidth',LW); hold on
 
 xlabel("$Iu [-]$",'Interpreter','latex','FontSize',FS);
-ylabel("$\sigma_{m_b,r}^2 [MN^2 m^2]$",'Interpreter','latex','FontSize',FS);
+ylabel("$\sigma_{m_b,r}^2 [\mathrm{MN^2 m^2}]$",'Interpreter','latex','FontSize',FS);
 strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
 legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
+
+
+% Para la condición de viento SKCD realizar un análsis de sensibilidad de 
+% la intensidad de turbelencia, Iu, y la longitud de escala, Lu. Calcular 
+% la varianza de desplazamiento en la punta, σ2 w_t, y la varianza del
+% momento flector en la raíz, σ2 mb_r para integración numérica y
+% descomposición
+
+
+
+
 
 %% 
 function [Ay,Az,Ayz] = pAxes2aAxes(A1,A2,alpha)
