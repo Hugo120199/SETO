@@ -34,33 +34,6 @@ for i = 1:length(c_aero)
     cd_x(i) = interp1(alpha,cd,alpha2(i));
     cl_x(i) = interp1(alpha,cd,alpha2(i));
     cm_x(i) = interp1(alpha,cd,alpha2(i));
-
-    % Gran hazaña, pero hemos visto que había soluciones mejores
-%     for j = 1:length(cd)
-%         if abs(alpha2(1,i)) <= abs(alpha(j,1))*1.05 & abs(alpha2(1,i)) >= abs(alpha(j,1))*0.95 
-%             cd_x(i) = cd(j,1);
-%             break
-%         else
-%             cd_x(i) = 0;
-%         end
-%     end
-%     for j = 1:length(cl)
-%         if abs(alpha2(1,i)) <= abs(alpha(j,1))*1.05 & abs(alpha2(1,i)) >= abs(alpha(j,1))*0.95 
-%             cl_x(i) = cl(j,1);
-%             break
-%         else
-%             cl_x(i) = 0;
-%         end
-%     end
-%     for j = 1:length(cm)
-%         if abs(alpha2(1,i)) <= abs(alpha(j,1))*1.05 & abs(alpha2(1,i)) >= abs(alpha(j,1))*0.95 
-%             cm_x(i) = cd(j,1);
-%             break
-%         else
-%             cm_x(i) = 0;
-%         end
-%     end
-
 end
 
 %% Cálculo Ca(r) y Fb,zh1(r)
@@ -73,16 +46,16 @@ for i = 1:length(r)
 end
 figure(1)
 subplot(1,2,1)
-plot(r,Ca,'b-')
+plot(r,Ca,'b-','LineWidth',1.5)
 grid on;
-xlabel('$r$ [m]','interpreter','latex','fontsize',14)
-ylabel('$C_a$ $(r)$ [Ns/m$^{2}$]','interpreter','latex','fontsize',14)
+xlabel('$r$ [m]','interpreter','latex','fontsize',18)
+ylabel('$C_a$ $(r)$ [Ns/m$^{2}$]','interpreter','latex','fontsize',18)
 
 subplot(1,2,2)
-plot(r,fb_zh1,'r-')
+plot(r,fb_zh1,'r-','LineWidth',1.5)
 grid on;
-xlabel('$r$ [m]','interpreter','latex','fontsize',14)
-ylabel('$F_{b,zH1}$ $(r)$ [N/m]','interpreter','latex','fontsize',14)
+xlabel('$r$ [m]','interpreter','latex','fontsize',18)
+ylabel('$F_{b,zH1}$ $(r)$ [N/m]','interpreter','latex','fontsize',18)
 
 %% Análisis modal
     % Características estructurales de la pala
@@ -95,10 +68,11 @@ psi1 = w;
 f1 = omega1/(2*pi);
     % Vector deformación del primer modo
 figure(2)
-plot(r,w,'k-')
+plot(r,w,'k-','LineWidth',1.5)
 grid on;
-xlabel('$r$ [m]','interpreter','latex','fontsize',14)
-ylabel('$\psi_1$','interpreter','latex','fontsize',14)
+xlabel('$r$ [m]','interpreter','latex','fontsize',18)
+ylabel('$\psi_1$','interpreter','latex','fontsize',18)
+sgtitle('Vector deformación primer modo batimiento','interpreter','latex','fontsize',14)
 
     % Cálculo de las características modales
 m1 = trapz(r,psi1.^2.*m);
@@ -120,23 +94,23 @@ H1 = tf(1,m1*[1, 2*chi_1*omega1, omega1^2]);
 
 figure(3)
 subplot(2,1,1)
-semilogx(wout/(2*pi),20*log10(squeeze(mag(1,1,:))),"-","Color",'black');
-ylabel("$Magnitud$ [dB]",'Interpreter','latex','fontsize',14);
-xlabel("$f$ [Hz]",'Interpreter','latex','fontsize',14);
+semilogx(wout/(2*pi),20*log10(squeeze(mag(1,1,:))),"-","Color",'black','LineWidth',1.5);
+ylabel("$Magnitud$ [dB]",'Interpreter','latex','fontsize',16);
+xlabel("$f$ [Hz]",'Interpreter','latex','fontsize',16);
 xlim([wout(1)/(2*pi) wout(end)/(2*pi)]);
 grid minor;
 
 subplot(2,1,2)
-semilogx(wout/(2*pi),squeeze(phase(1,1,:)),"-","Color",'black');
-ylabel("$Fase$ $[^{\circ}]$",'Interpreter','latex','fontsize',14);
-xlabel("$f$ [Hz]",'Interpreter','latex','fontsize',14);
+semilogx(wout/(2*pi),squeeze(phase(1,1,:)),"-","Color",'black','LineWidth',1.5);
+ylabel("$Fase$ $[^{\circ}]$",'Interpreter','latex','fontsize',16);
+xlabel("$f$ [Hz]",'Interpreter','latex','fontsize',16);
 xlim([wout(1)/(2*pi) wout(end)/(2*pi)]);
 grid minor;
 
     % Comparación de f1 con los distintos modelos (esta en el libro esto también)
-f1_fast = 1.0793;  %f1_fast = 0.6664; ??? % Esto es por estar en bandera
+f1_fast = 1.0793;  
 error_fast = abs(f1_fast - f1)/f1;
-f1_adams = 1.074;  %f1_adams = 0.6292; ???
+f1_adams = 1.074; 
 error_adams = abs(f1_adams - f1)/f1;
 
 disp("---------------------------------------");
@@ -152,20 +126,20 @@ W_prom = psi1.*Fb_zh1_prom;
     % y fuerzas asociadas a la posición de bandera (no gira y le entra
     % aire alineado a los perfiles---> resistencia pequeña)
 figure(4)
-plot(r,W_prom,'k-')
+plot(r,W_prom,'k-','LineWidth',1.5)
 grid on;
-xlabel('$r$ $[\mathrm{m}]$','interpreter','latex','fontsize',14)
-ylabel('$W$ $(r)$ $[\mathrm{m}]$','interpreter','latex','fontsize',14)
+xlabel('$r$ $[\mathrm{m}]$','interpreter','latex','fontsize',18)
+ylabel('$W$ $(r)$ $[\mathrm{m}]$','interpreter','latex','fontsize',18)
 
     % Distribución promedio de momento flector (esto está con pinzas)
 for i = 1:length(r)
     Mb_yh1_prom(i) = 1./(m1*(omega1)^2).*trapz(r,fb_zh1'.*psi1.*r(i));
 end
 figure(5)
-plot(r,Mb_yh1_prom,'k-')
+plot(r,Mb_yh1_prom,'k-','LineWidth',1.5)
 grid on;
-xlabel('$r$ $[\mathrm{m}]$','interpreter','latex','fontsize',14)
-ylabel('$Mb_{y,H1}$ $(r)$ $[\mathrm{N}]$','interpreter','latex','fontsize',14)
+xlabel('$r$ $[\mathrm{m}]$','interpreter','latex','fontsize',18)
+ylabel('$Mb_{y,H1}$ $(r)$ $[\mathrm{N}]$','interpreter','latex','fontsize',18)
 
 %% Varianza de desplazamiento y de momento flector de batimiento
 
@@ -257,9 +231,124 @@ saveas(gcf,'Iuvssigma_mbr','eps2c');
 % momento flector en la raíz, σ2 mb_r para integración numérica y
 % descomposición
 
+    % Análisis Lu
+Iu = 0.15;                  % Intensidad turbulencia
+Lu = linspace(50,500,50);   % Longitud de escala (barrido de 50 a 500 m)    
+sigma_u = (Iu*U1);          % Desviación estándar/típica
+F = logspace(-4,1,500);     % Vector de frecuencias [Hz]
+
+f1 = omega1/(2*pi);
+k_mb1 = trapz(r,m.*psi1.*r);
+for i = 1:length(Lu)
+    Su = @(f) kaimalSpectra(f,U1,Lu(i),sigma_u);
+    Coh  = @(r1,r2,f) davenportCoherence(abs(r1-r2),f,U1,Lu(i));
+    S_f1f1 = getSf1f1(F,r,psi1,Ca',Su,Coh)';
+
+        % Integración numérica
+    H_1 = 1./(4*pi^2*m1.*sqrt((-F.^2+f1^2).^2+(2*chi_1*f1.*F).^2));
+    sigma2_mbrN(i) = omega1^4*k_mb1^2*trapz(F,H_1.^2.*S_f1f1);
+    sigma2_wtN(i) = trapz(F,H_1.^2.*S_f1f1);
+
+        % Descomposición fondo-resonante
+    S_f1f1_f1 = getSf1f1(f1,r,psi1,Ca',Su,Coh);
+    sigma2_mbrF(i) = omega1^4*k_mb1^2*trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
+    sigma2_mbrR(i) = omega1^4*k_mb1^2*S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_mbrD(i) = sigma2_mbrF(i)+sigma2_mbrR(i);
+
+    sigma2_wtF(i) = trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
+    sigma2_wtR(i) = S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_wtD(i) = sigma2_wtF(i)+sigma2_wtR(i);
+end
+figure()
+%subplot(1,2,1)
+plot(Lu,sigma2_mbrN,'r-','linewidth',2)
+hold on; grid on;
+plot(Lu,sigma2_mbrD,'k--','linewidth',2)
+hold on; 
+plot(Lu,sigma2_mbrF,'k:','linewidth',1.5)
+hold on; 
+plot(Lu,sigma2_mbrR,'k-.','linewidth',1.5)
+axis([50 500 0 11e6])
+xlabel('$L_u$ $[\mathrm{m}]$','interpreter','latex','fontsize',18)
+ylabel('$\sigma_{m_b,r}^2 [\mathrm{N^2 m^2}]$','interpreter','latex','fontsize',18)
+legend('Integracion numerica','Descomposicion','Respuesta de fondo',...
+    'Respuesta resonante','interpreter','latex','fontsize',14,...
+    'location','best')
+
+figure()
+%subplot(1,2,2)
+plot(Lu,sigma2_wtN,'r-','linewidth',2)
+hold on; grid on;
+plot(Lu,sigma2_wtD,'k--','linewidth',2)
+hold on;
+plot(Lu,sigma2_wtF,'k:','linewidth',1.5)
+hold on;
+plot(Lu,sigma2_wtR,'k-.','linewidth',1.5)
+axis([50 500 0 3.5e-7])
+xlabel('$L_u$ $[\mathrm{m}]$','interpreter','latex','fontsize',18)
+ylabel('$\sigma_{w,t}^2 [\mathrm{m^2}]$','interpreter','latex','fontsize',18)
+legend('Integracion numerica','Descomposicion','Respuesta de fondo',...
+    'Respuesta resonante','interpreter','latex','fontsize',14,...
+    'location','best')
 
 
+    % Análisis Iu
+Lu = 275;                       % Intensidad turbulencia
+Iu = linspace(0.135,0.165,50);  % Longitud de escala (barrido de 50 a 500 m)    
+sigma_u = (Iu.*U1);             % Desviación estándar/típica
 
+for i = 1:length(Iu)
+    Su = @(f) kaimalSpectra(f,U1,Lu,sigma_u(i));
+    Coh  = @(r1,r2,f) davenportCoherence(abs(r1-r2),f,U1,Lu);
+    S_f1f1 = getSf1f1(F,r,psi1,Ca',Su,Coh)';
+
+        % Integración numérica
+    H_1 = 1./(4*pi^2*m1.*sqrt((-F.^2+f1^2).^2+(2*chi_1*f1.*F).^2));
+    sigma2_mbrN(i) = omega1^4*k_mb1^2*trapz(F,H_1.^2.*S_f1f1);
+    sigma2_wtN(i) = trapz(F,H_1.^2.*S_f1f1);
+
+        % Descomposición fondo-resonante
+    S_f1f1_f1 = getSf1f1(f1,r,psi1,Ca',Su,Coh);
+    sigma2_mbrF(i) = omega1^4*k_mb1^2*trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
+    sigma2_mbrR(i) = omega1^4*k_mb1^2*S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_mbrD(i) = sigma2_mbrF(i)+sigma2_mbrR(i);
+
+    sigma2_wtF(i) = trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
+    sigma2_wtR(i) = S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_wtD(i) = sigma2_wtF(i)+sigma2_wtR(i);
+end
+
+figure()
+%subplot(1,2,1)
+plot(Iu,sigma2_mbrN,'r-','linewidth',2)
+hold on; grid on;
+plot(Iu,sigma2_mbrD,'k--','linewidth',2)
+hold on; 
+plot(Iu,sigma2_mbrF,'k:','linewidth',1.5)
+hold on; 
+plot(Iu,sigma2_mbrR,'k-.','linewidth',1.5)
+axis([0.135 0.165 0 10e6])
+xlabel('$I_u$ $[\mathrm{-}]$','interpreter','latex','fontsize',18)
+ylabel('$\sigma_{m_b,r}^2 [\mathrm{N^2 m^2}]$','interpreter','latex','fontsize',18)
+legend('Integracion numerica','Descomposicion','Respuesta de fondo',...
+    'Respuesta resonante','interpreter','latex','fontsize',14,...
+    'location','best')
+
+figure()
+%subplot(1,2,2)
+plot(Iu,sigma2_wtN,'r-','linewidth',2)
+hold on; grid on;
+plot(Iu,sigma2_wtD,'k--','linewidth',2)
+hold on;
+plot(Iu,sigma2_wtF,'k:','linewidth',1.5)
+hold on;
+plot(Iu,sigma2_wtR,'k-.','linewidth',1.5)
+axis([0.135 0.165 0 3e-7])
+xlabel('$I_u$ $[\mathrm{-}]$','interpreter','latex','fontsize',18)
+ylabel('$\sigma_{w,t}^2 [\mathrm{m^2}]$','interpreter','latex','fontsize',18)
+legend('Integracion numerica','Descomposicion','Respuesta de fondo',...
+    'Respuesta resonante','interpreter','latex','fontsize',14,...
+    'location','best')
 
 %% 
 function [Ay,Az,Ayz] = pAxes2aAxes(A1,A2,alpha)
