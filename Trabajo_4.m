@@ -207,6 +207,7 @@ xlabel("$Lu [\mathrm{m}]$",'Interpreter','latex','FontSize',FS);
 ylabel("$\sigma_{w,t}^2 [\mathrm{m^2}]$",'Interpreter','latex','FontSize',FS);
 legend("$Iu = " + string(Iu) + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
+saveas(gcf,'Luvssigma_wt','eps2c');
 
 figure()
 plot(Iu,sigma_wt(1,:),'-','LineWidth',LW); hold on
@@ -220,6 +221,7 @@ ylabel("$\sigma_{w,t}^2 [\mathrm{m^2}]$",'Interpreter','latex','FontSize',FS);
 strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
 legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
+saveas(gcf,'Iuvssigma_wt','eps2c');
 
 figure()
 plot(Lu,sigma_mbr(:,1)/(10^6),'-','LineWidth',LW); hold on
@@ -232,6 +234,7 @@ xlabel("$Lu [\mathrm{m}]$",'Interpreter','latex','FontSize',FS);
 ylabel("$\sigma_{m_b,r}^2 [\mathrm{MN^2 m^2}]$",'Interpreter','latex','FontSize',FS);
 legend("$Iu = " + string(Iu) + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
+saveas(gcf,'Luvssigma_mbr','eps2c');
 
 figure()
 plot(Iu,sigma_mbr(1,:)/(10^6),'-','LineWidth',LW); hold on
@@ -245,6 +248,7 @@ ylabel("$\sigma_{m_b,r}^2 [\mathrm{MN^2 m^2}]$",'Interpreter','latex','FontSize'
 strLegend = {string(round(Lu(1))),string(round(Lu(10))),string(round(Lu(25))),string(round(Lu(35))),string(round(Lu(end)))};
 legend("$Lu = " + strLegend + " $",'Interpreter','latex','Location','northwest','FontSize',FS);
 grid on;
+saveas(gcf,'Iuvssigma_mbr','eps2c');
 
 
 % Para la condición de viento SKCD realizar un análsis de sensibilidad de 
