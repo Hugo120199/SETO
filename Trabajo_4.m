@@ -350,6 +350,41 @@ legend('Integracion numerica','Descomposicion','Respuesta de fondo',...
     'Respuesta resonante','interpreter','latex','fontsize',14,...
     'location','best')
 
+%% Analisis respuesta resonante y de fondo
+
+fmin=log10(1e-4);
+fmax=log10(50);
+nf=1500;
+f=logspace(fmin,fmax,nf);
+
+Iu = 0.15;
+
+sigma_u_0 = (Iu*U1);
+
+H1_2 = (tf(1,m1*[1, 2*chi_1*omega1, omega1^2]))^2;
+[mag,phase,wout] = bode(H1_2,2*pi*f);
+
+Su = @(f) kaimalSpectra(f,U1,Lu,sigma_u_0);
+
+H0 = ((omega1^4)*(m1^2))^-1;
+S_f1f1_f1 = getSf1f1(f1,r,psi1,Ca',Su,Coh);
+
+for i = 1:length(f)
+    S_f1f1_f(i) = getSf1f1(f(i),r,psi1,Ca',Su,Coh);
+end
+
+figure()
+semilogx(wout/(2*pi),20*log10(squeeze(mag(1,1,:))*S_f1f1_f1),"-","Color",'black','LineWidth',1.5); hold on
+semilogx(f(2:end),20*log10(S_f1f1_f(2:end)*H0),"--","Color",'black','LineWidth',1.5); hold on
+xline(f1,'--','Color','red','LineWidth',1); hold on
+ylabel("$Magnitud$ [dB]",'Interpreter','latex','fontsize',12);
+xlabel("$f$ [Hz]",'Interpreter','latex','fontsize',12);
+strLegend = {'$S_{f_1 f_1}^1(f_1) |H_1(f)|^2$','$|H_1(0)|^2 S_{f_1 f_1}^1(f)$','$f_1$'};
+pbaspect([2 1 1]);
+legend(strLegend,'Location','southwest','FontSize',12);
+grid minor;
+saveas(gcf,'bode_respuestasviento','eps2c');
+
 %% 
 function [Ay,Az,Ayz] = pAxes2aAxes(A1,A2,alpha)
     % According to Bauchau page 234 equations (6.34a,b,c) where for the
