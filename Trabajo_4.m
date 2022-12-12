@@ -133,7 +133,8 @@ ylabel('$W$ $(r)$ $[\mathrm{m}]$','interpreter','latex','fontsize',18)
 
     % Distribución promedio de momento flector (esto está con pinzas)
 for i = 1:length(r)
-    Mb_yh1_prom(i) = 1./(m1*(omega1)^2).*trapz(r,fb_zh1'.*psi1.*r(i));
+%     Mb_yh1_prom(i) = 1./(m1*(omega1)^2).*trapz(r,fb_zh1'.*psi1.*r(i));
+    Mb_yh1_prom(i) = trapz(r,fb_zh1.*(R-r(i)));
 end
 figure(5)
 plot(r,Mb_yh1_prom,'k-','LineWidth',1.5)
@@ -246,8 +247,11 @@ for i = 1:length(Lu)
 
         % Integración numérica
     H_1 = 1./(4*pi^2*m1.*sqrt((-F.^2+f1^2).^2+(2*chi_1*f1.*F).^2));
+%     H_1 = 1./(4*pi^2*m1.*(-F.^2+f1^2+(2*chi_1*f1.*F)*sqrt(-1)));
     sigma2_mbrN(i) = omega1^4*k_mb1^2*trapz(F,H_1.^2.*S_f1f1);
+%     sigma2_mbrN(i) = omega1^4*k_mb1^2*trapz(F,abs(H_1).^2.*S_f1f1);
     sigma2_wtN(i) = trapz(F,H_1.^2.*S_f1f1);
+%     sigma2_wtN(i) = trapz(F,abs(H_1).^2.*S_f1f1);
 
         % Descomposición fondo-resonante
     S_f1f1_f1 = getSf1f1(f1,r,psi1,Ca',Su,Coh);
