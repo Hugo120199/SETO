@@ -49,13 +49,13 @@ subplot(1,2,1)
 plot(r,Ca,'b-','LineWidth',1.5)
 grid on;
 xlabel('$r$ [m]','interpreter','latex','fontsize',18)
-ylabel('$C_a$ $(r)$ [Ns/m$^{2}$]','interpreter','latex','fontsize',18)
+ylabel('$c_a$ $(r)$ [Ns/m$^{2}$]','interpreter','latex','fontsize',18)
 
 subplot(1,2,2)
 plot(r,fb_zh1,'r-','LineWidth',1.5)
 grid on;
 xlabel('$r$ [m]','interpreter','latex','fontsize',18)
-ylabel('$F_{b,zH1}$ $(r)$ [N/m]','interpreter','latex','fontsize',18)
+ylabel('$f_{b,zH1}$ $(r)$ [N/m]','interpreter','latex','fontsize',18)
 
 %% Análisis modal
     % Características estructurales de la pala
@@ -247,20 +247,17 @@ for i = 1:length(Lu)
 
         % Integración numérica
     H_1 = 1./(4*pi^2*m1.*sqrt((-F.^2+f1^2).^2+(2*chi_1*f1.*F).^2));
-%     H_1 = 1./(4*pi^2*m1.*(-F.^2+f1^2+(2*chi_1*f1.*F)*sqrt(-1)));
     sigma2_mbrN(i) = omega1^4*k_mb1^2*trapz(F,H_1.^2.*S_f1f1);
-%     sigma2_mbrN(i) = omega1^4*k_mb1^2*trapz(F,abs(H_1).^2.*S_f1f1);
     sigma2_wtN(i) = trapz(F,H_1.^2.*S_f1f1);
-%     sigma2_wtN(i) = trapz(F,abs(H_1).^2.*S_f1f1);
 
         % Descomposición fondo-resonante
     S_f1f1_f1 = getSf1f1(f1,r,psi1,Ca',Su,Coh);
     sigma2_mbrF(i) = omega1^4*k_mb1^2*trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
-    sigma2_mbrR(i) = omega1^4*k_mb1^2*S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_mbrR(i) = omega1^4*k_mb1^2*S_f1f1_f1.*trapz(F,H_1.^2);
     sigma2_mbrD(i) = sigma2_mbrF(i)+sigma2_mbrR(i);
 
     sigma2_wtF(i) = trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
-    sigma2_wtR(i) = S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_wtR(i) = S_f1f1_f1.*trapz(F,H_1.^2);
     sigma2_wtD(i) = sigma2_wtF(i)+sigma2_wtR(i);
 end
 figure()
@@ -314,11 +311,11 @@ for i = 1:length(Iu)
         % Descomposición fondo-resonante
     S_f1f1_f1 = getSf1f1(f1,r,psi1,Ca',Su,Coh);
     sigma2_mbrF(i) = omega1^4*k_mb1^2*trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
-    sigma2_mbrR(i) = omega1^4*k_mb1^2*S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_mbrR(i) = omega1^4*k_mb1^2*S_f1f1_f1.*trapz(F,H_1.^2);
     sigma2_mbrD(i) = sigma2_mbrF(i)+sigma2_mbrR(i);
 
     sigma2_wtF(i) = trapz(F,S_f1f1)/(4*pi^2*m1*f1^2)^2;
-    sigma2_wtR(i) = S_f1f1_f1/(64*pi^3*chi_1*m1^2*f1^3);
+    sigma2_wtR(i) = S_f1f1_f1.*trapz(F,H_1.^2);
     sigma2_wtD(i) = sigma2_wtF(i)+sigma2_wtR(i);
 end
 
