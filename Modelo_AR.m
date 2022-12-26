@@ -12,7 +12,7 @@ load Z_2013.mat
 %% Modelo Autorregresivo (AR) 
 hp = 1;
 
-    % Algunos datos del histórico
+    % Algunos datos del histórico --> Creo que esto no podemos hacerlo
 number = 1000:500:8000;
 number = [number length(y_2013)]; 
 number = 2145:5:2165; 
@@ -64,7 +64,7 @@ for j = 1:length(number)-1
 end 
 
     % Todos los datos del histórico
-p = 1000:10:2000;
+p = 1000:10:2200;
 j = 0;
 for i = 1:length(p)
     modHp1_AR = init_AR(p(i),hp);
@@ -107,10 +107,16 @@ load Z_2013.mat
 
     % Elegimos una combinación y representamos los resultados de predicción
     % frente a los datos de entrenamiento: 
+%       1) En el caso de que se pudiera coger ciertos datos (también
+%       convendría aumentar la ventana temporal porque reduce el error):
 %       - Nº datos del histórico empleados para entrenar: 2145-2155 [N]
 %       - Datos histótico: X, Y y Z (todos en combinación) 
 %       - Ventana temporal: 50 [P]
+%       2) Para toodos los datos del histórico:
+%       - Datos histótico: X, Y y Z (todos en combinación) 
+%       - Ventana temporal: 2000 [P]
 
+    %%% Caso 1)
 P = 50; 
 N = 2150;
 
@@ -121,16 +127,41 @@ Z_ = Z_2013(2,end-N:end);
 modHp1_AR = init_AR(P,hp);
 modHp1_AR_trained = train_AR(modHp1_AR,y_,X_,Z_);
 y_predHp1_AR = pred_AR(modHp1_AR_trained,y_,X_,Z_);
-% y_predHp1_AR = pred_AR(modHp1_AR_trained,y_2013,X_2013,Z_2013);
 ErrYXZ_AR_hp1 = eval_RMSE(y_,y_predHp1_AR);
 
 
     % Representación de las series temporales
 figure()
-plot(y_2013,'-r'); hold on;
-% plot(y_,'-r'); hold on;
+% plot(y_2013,'-r'); hold on;
+plot(y_,'-r'); hold on;
 plot(y_predHp1_AR,'-b'); hold on;
 grid on
-xlabel('Medida')
-ylabel('Potencia')
+xlabel('Medida','interpreter','latex','fontsize',16)
+ylabel('Potencia','interpreter','latex','fontsize',16)
+legend('Serie Potencia','Predicci\''on Potencia','interpreter','latex',...
+    'fontsize',16)
+
+    %%% Caso 2)
+P = 2150; 
+
+y_ = y_2013(1,:);
+X_ = X_2013(1,:);
+Z_ = Z_2013(2,:);
+
+modHp1_AR = init_AR(P,hp);
+modHp1_AR_trained = train_AR(modHp1_AR,y_,X_,Z_);
+y_predHp1_AR = pred_AR(modHp1_AR_trained,y_,X_,Z_);
+ErrYXZ_AR_hp1 = eval_RMSE(y_,y_predHp1_AR);
+
+    % Representación de las series temporales
+figure()
+plot(y_,'-r'); hold on;
+plot(y_predHp1_AR,'-b'); hold on;
+grid on
+xlabel('Medida','interpreter','latex','fontsize',16)
+ylabel('Potencia','interpreter','latex','fontsize',16)
+legend('Serie Potencia','Predicci\''on Potencia','interpreter','latex',...
+    'fontsize',16)
+
+
 
